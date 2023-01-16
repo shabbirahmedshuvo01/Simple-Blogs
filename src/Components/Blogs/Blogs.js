@@ -24,6 +24,9 @@ const Blogs = () => {
                     <button className='btn btn-danger' onClick={handleSingOut}>Sign Out</button>
                     :
                     <Link to={'/login'}>Login</Link>}
+                    <br />
+                    <Link to={'/AddBlogs'}>Add Blogs</Link>
+
             </div>
             <div className='bg-slate-50'>
                 <section>
