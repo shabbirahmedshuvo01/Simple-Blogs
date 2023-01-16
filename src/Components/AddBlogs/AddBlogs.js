@@ -26,7 +26,7 @@ const AddBlogs = () => {
         }
 
 
-        const url = `http://localhost:5000/blog`;
+        const url = `https://simple-blogs-server.onrender.com/blog`;
         fetch(url, {
             method: 'POST',
             headers: {
