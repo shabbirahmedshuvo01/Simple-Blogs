@@ -1,6 +1,34 @@
 import React from 'react';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import auth from '../../firebase.init';
 
 const SignUp = () => {
+
+    const [
+        createUserWithEmailAndPassword,
+        user,
+        loading,
+        error,
+    ] = useCreateUserWithEmailAndPassword(auth);
+
+    const navigate = useNavigate();
+
+    if (user) {
+        navigate('/home')
+    }
+
+    const handleRegister = event => {
+        event.preventDefault();
+        const name = event.target.name.value;
+        const email = event.target.email.value;
+        const password = event.target.password.value;
+
+        console.log(name,email,password)
+
+        createUserWithEmailAndPassword(email, password);
+    }
+
     return (
         <div>
             <section class="h-full gradient-form bg-gray-200 md:h-screen">
@@ -19,31 +47,31 @@ const SignUp = () => {
                                                 />
                                                 <h4 class="text-xl font-semibold mt-1 mb-12 pb-1">We are The Lotus Team</h4>
                                             </div>
-                                            <form>
-                                                <p class="mb-4">Please login to your account</p>
+                                            <form onSubmit={handleRegister}>
+                                                <p class="mb-4">Please Create to your account</p>
                                                 <div class="mb-4">
                                                     <input
-                                                        type="text"
-                                                        class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                                        id="exampleFormControlInput1"
-                                                        placeholder="Username"
-                                                    />
+                                                        type="text" name="name" id="" placeholder='Your Name' required
+                                                        class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
                                                 </div>
                                                 <div class="mb-4">
                                                     <input
-                                                        type="password"
-                                                        class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                                        id="exampleFormControlInput1"
-                                                        placeholder="Password"
-                                                    />
+                                                        type="email" name="email" id="" placeholder='Email address' required
+                                                        class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
+                                                </div>
+                                                <div class="mb-4">
+                                                    <input
+                                                        type="password" name="password" id="" placeholder='Password' required
+                                                        class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
                                                 </div>
                                                 <div class="text-center pt-1 mb-12 pb-1">
-                                                    <button className='btn'>Log in</button>
+                                                    <input
+                                                        className='btn btn-success mt-2' type="submit" value="register" />
                                                     <br />
-                                                    <a class="text-gray-500 my-3" href="#!">Forgot password?</a>
+                                                    <a class="text-gray-500 mt-5" href="#!">Forgot password?</a>
                                                 </div>
                                                 <div class="">
-                                                    <p class="mb-0 mr-2">Don't have an account? <span><a class="text-blue-600" href="#!">Sign Up</a></span> </p>
+                                                    <p class="mb-0 mr-2">Don't have an account? <span><Link class="text-blue-600" to={'/login'} >Sign Up</Link></span> </p>
                                                 </div>
                                             </form>
                                         </div>
