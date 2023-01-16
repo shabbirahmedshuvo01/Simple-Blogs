@@ -1,4 +1,8 @@
+import { signOut } from 'firebase/auth';
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { Link } from 'react-router-dom';
+import auth from '../../firebase.init';
 
 const Blogs = () => {
 
@@ -7,8 +11,20 @@ const Blogs = () => {
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
+
+    const [user] = useAuthState(auth);
+
+    const handleSingOut = () => {
+        signOut(auth);
+    }
     return (
         <div>
+            <div>
+                {user ?
+                    <button className='btn btn-danger' onClick={handleSingOut}>Sign Out</button>
+                    :
+                    <Link to={'/login'}>Login</Link>}
+            </div>
             <div className='bg-slate-50'>
                 <section>
                     <div className='mx-20 pl-28'>
@@ -35,11 +51,11 @@ const Blogs = () => {
                         </div>
                     </div>
                     <div className='mt-6 bg-slate-50 flex flex-col gap-5 items-start justify-start mx-20'>
-                            
-                            <input type="text" name='comment' required placeholder='Write Your Comment' className="input input-bordered input-sm w-full max-w-xs"/>
-                            
-                            <button className='btn btn-success'>Comment</button>
-                        
+
+                        <input type="text" name='comment' required placeholder='Write Your Comment' className="input input-bordered input-sm w-full max-w-xs" />
+
+                        <button className='btn btn-success'>Comment</button>
+
                         <div className='my-4 md:mx-12 mx-20'>
                             <hr />
                         </div>

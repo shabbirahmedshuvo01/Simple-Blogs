@@ -1,6 +1,52 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import auth from '../../firebase.init';
 
 const Login = () => {
+
+    const emailRef = useRef('');
+    const passwordRef = useRef('');
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    let from = location.state?.from?.pathname || "/";
+
+
+    const [
+        signInWithEmailAndPassword,
+        user,
+        loading,
+        error,
+    ] = useSignInWithEmailAndPassword(auth);
+    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+
+    if (user) {
+        navigate(from, { replace: true });
+    }
+
+
+
+    const handleSubmit = event => {
+        event.preventDefault();
+        const email = emailRef.current.value;
+        const password = passwordRef.current.value;
+
+        signInWithEmailAndPassword(email, password);
+    }
+
+
+    const resetPassword = async () => {
+        const email = emailRef.current.value;
+        if (email) {
+            await sendPasswordResetEmail(email)
+            window.alert('sent email');
+        }
+        else {
+            window.alert('please enter your email address');
+        }
+    }
+
     return (
         <div>
             <section class="h-full gradient-form bg-gray-200 md:h-screen">
@@ -19,14 +65,16 @@ const Login = () => {
                                                 />
                                                 <h4 class="text-xl font-semibold mt-1 mb-12 pb-1">We are The Lotus Team</h4>
                                             </div>
-                                            <form>
+                                            <form onSubmit={handleSubmit}>
                                                 <p class="mb-4">Please login to your account</p>
                                                 <div class="mb-4">
                                                     <input
-                                                        type="text"
+                                                        type="email"
                                                         class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                         id="exampleFormControlInput1"
-                                                        placeholder="Username"
+                                                        placeholder="Email"
+                                                        required
+                                                        ref={emailRef}
                                                     />
                                                 </div>
                                                 <div class="mb-4">
@@ -35,14 +83,14 @@ const Login = () => {
                                                         class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                         id="exampleFormControlInput1"
                                                         placeholder="Password"
+                                                        ref={passwordRef}
                                                     />
+
+                                                    <input className='btn btn-primary mt-2' type="submit" value="Log In" />
                                                 </div>
-                                                <div class="text-center pt-1 mb-12 pb-1">
-                                                    <button>Log in</button>
-                                                    <a class="text-gray-500" href="#!">Forgot password?</a>
-                                                </div>
+                                                <a onClick={resetPassword} class="text-gray-500" href="#!">Forgot password?</a>
                                                 <div class="">
-                                                    <p class="mb-0 mr-2">Don't have an account? <span><a class="text-blue-600" href="#!">Sign Up</a></span> </p>
+                                                    <p class="mb-0 mr-2">Don't have an account? <span><Link class="text-blue-600" to={'/signup'}>Sign Up</Link></span> </p>
                                                 </div>
                                             </form>
                                         </div>
